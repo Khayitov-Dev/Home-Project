@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }}| Home{% endblock title %}
+{% block content %}
+<!-- Blog Entries Column -->
+<div class="row">
+  
+  <div class="col-md-8 my-4">
+    <!-- Blog Post -->
+    <div class="row">
+      {% for obj in homes %}
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <img class="card-img-top" src="" alt="Card image cap" style="height:160px">
+          <div class="card-body">
+            <h3 class="card-title">
+              <a href="">{{ obj.title }}</a>
+            </h3>
+            <p class="card-text">
+              <div class="row">
+                <div class="col-md-6">
+                  <b>Price:</b> {{ obj.price }}
+                </div>
+                <div class="col-md-6">
+                  <b>Likes:</b> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <b>Taste:</b> {{ obj.taste }}
+                </div>
+                <div class="col-md-6">
+                  <b>Person:</b> {{ obj.persons }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <b>Category: </b>{{ obj.categories }}
+                </div>
+              </div>
+            </p>
+            <a href="" class="btn btn-secondary">Details</a>
+            <div class="float-right user-icons">
+              <form action="" id='like_form{{ obj.id }}' method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="unlike" value="{{ obj.id }}">
+                <a href="javascript:{}" onclick="document.getElementById('like_form{{obj.id}}').submit(); return false;">
+                  <i class="fas fa-thumbs-up"></i></a>
+              </form>
+              <form action="" id='unlike_form{{ obj.id }}' method="POST">
+                <input type="hidden" name="like" value="{{ obj.id }}">
+                <a href="javascript:{}" onclick="document.getElementById('unlike_form{{obj.id}}').submit(); return false;">
+                  <i class="far fa-thumbs-up"></i></a>
+              </form>
+            </div>
+          </div>
+          <div class="card-footer text-muted">
+            Updated: , By
+            <a href=""></a>
+          </div>
+        </div>
+      </div>
+      <P class="btn btn-warning ml-3">Sorry !! No post found...</P>
+    </div>
+    {% endfor %}
+
+    <ul class="pagination justify-content-center mb-4">
+      <li class="page-item">
+        <a class="page-link" href="">&larr; Older</a>
+      </li>
+      <li class="page-item disabled">
+        <a class="page-link" href="">&larr; Older</a>
+      </li>
+
+      <li class="page-item">
+        <a class="page-link" href="">Newer &rarr;</a>
+      </li>
+      <li class="page-item disabled">
+        <a class="page-link" href="#">Newer &rarr;</a>
+      </li>
+    </ul>
+  </div>
+  {% endblock content %}
