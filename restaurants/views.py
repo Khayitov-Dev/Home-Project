@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import  generic
 from restaurants import models
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # Create your views here.
-
 
 
 
@@ -21,18 +22,27 @@ class HomeListView(generic.ListView):
         q = self.request.GET.get('q')
         cat = self.request.GET.get('cat')
         author = self.request.GET.get('author')
-
-
         if q:
             queryset = queryset.filter(
                 Q(title__icontains=q) |
                 Q(details__icontains=q)
-            ).distinict()
+            ).distinct()
         if cat:
             queryset = queryset.filter(categories__icontains=cat)
 
         if author:
             queryset = queryset.filter(user__username=author)
-        return  queryset
-    
+        return queryset
 
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        post_id = request.POST.get('unlike')
+        post_id2 = request.POST.get('like')
+        if post_id is not None:
+            post = get_object_or_404(models.HomePlaceSale, id=post_id)
+            post.likes.remove(request.user)
+        if post_id2 is not None:
+            post_id2 = request.POST.get('like')
+            post = get_object_or_404(models.HomePlaceSale, id=post_id2)
+            post.likes.add(request.user)
+        return redirect('home')
