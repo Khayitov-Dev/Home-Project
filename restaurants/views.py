@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import  generic
 from restaurants import models
@@ -11,7 +12,7 @@ from django.utils.decorators import method_decorator
 
 class HomeListView(generic.ListView):
     queryset = models.HomePlaceSale.objects.all()
-    paginate_by = 5
+    paginate_by = 6
     template_name = 'restaurants/list.html'
     context_object_name = 'homes'
 
@@ -46,3 +47,21 @@ class HomeListView(generic.ListView):
             post = get_object_or_404(models.HomePlaceSale, id=post_id2)
             post.likes.add(request.user)
         return redirect('home')
+
+    
+
+class HomeDetailView(generic.DetailView):
+    queryset = models.HomePlaceSale.objects.all()
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        comment = request.POST.get('comment')
+        c_slug = request.POST.get('slug')
+        if comment:
+            if c_slug:
+                post = get_object_or_404(models.HomePlaceSale, slug=c_slug)
+                comment = models.Comment.objects.create(
+                    user=request.user, post=post, text=comment)
+                comment.save()
+                return redirect('detail', c_slug)
+        return redirect('detail', c_slug)

@@ -6,7 +6,7 @@
         <div class="card-body">
             <form action="{% url 'home' %}" method="get">
                 <div class="input-group">
-                    <input type="search" name="q" class="form-control" placeholder="Search for..."  required>
+                    <input type="search" name='q' class="form-control" placeholder="Search for..." value="{{ request.GET.q }}" required>
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="submit">Go!</button>
                     </span>

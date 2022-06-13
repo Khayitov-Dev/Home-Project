@@ -14,7 +14,7 @@
           <img class="card-img-top" src="{{ obj.image.url }}"  alt="Card image cap" style="height:160px; object-fit: cover;">
           <div class="card-body">
             <h3 class="card-title">
-              <a href="">{{ obj.title }}</a>
+              <a href="{% url 'detail' obj.slug %}">{{ obj.title }}</a>
             </h3>
             <p class="card-text">
               <div class="row">
@@ -35,11 +35,14 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <b>Category: </b>{{ obj.categories }}
+                  {% for cat in obj.get_categories %}
+                  <b>Category: </b>
+                  <a href="?q={{ request.GET.q }}&cat={{ cat }}">{{ cat }}</a>
+                  {% endfor %}
                 </div>
               </div>
             </p>
-            <a href="" class="btn btn-secondary">Details</a>
+            <a href="{% url 'detail' obj.slug %}" class="btn btn-secondary">Details</a>
             <div class="float-right user-icons">
               {% if obj in user_liked_posts %}
               <form action="{% url 'home' %}" id='like_form{{ obj.id }}' method="POST">
@@ -59,8 +62,8 @@
             </div>
           </div>
           <div class="card-footer text-muted">
-            Updated: , By
-            <a href=""></a>
+            Updated: {{ obj.updated_at }}, By
+            <a href="?author={{ obj.user }}">{{ obj.user }}</a>
           </div>
         </div>
       </div>
@@ -70,10 +73,10 @@
       {% endif %}
     </div>
 
+    <!-- Pagination -->
     {% if is_paginated %}
-
     <ul class="pagination justify-content-center mb-4">
-      {% if page_obf_has_previous %}
+      {% if page_obj.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr; Older</a>
       </li>
@@ -82,7 +85,8 @@
         <a class="page-link" href="">&larr; Older</a>
       </li>
       {% endif %}
-      {% if page.obj.has_next %}
+
+      {% if page_obj.has_next %}
       <li class="page-item">
         <a class="page-link" href="?page={{ page_obj.next_page_number }}">Newer &rarr;</a>
       </li>
