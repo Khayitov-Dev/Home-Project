@@ -17,20 +17,20 @@
                     <a class="nav-link" href="">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Profile</a>
+                    <a class="nav-link" href="{% url 'profile' request.user.id %}">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="">Create Post</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Logout</a>
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="">Login</a>
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Register</a>
+                    <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
                 {% endif %}
                     
