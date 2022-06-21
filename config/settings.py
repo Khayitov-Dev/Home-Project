@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.humanize',
+
+
     # local apps
     'accounts.apps.AccountsConfig',
     'restaurants.apps.RestaurantsConfig',
@@ -66,6 +69,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'restaurants.context_processor.categories',
+                'restaurants.context_processor.user_liked_posts',
+                'restaurants.context_processor.recent_posts',
             ],
         },
     },
@@ -134,3 +140,4 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = 'my_posts'

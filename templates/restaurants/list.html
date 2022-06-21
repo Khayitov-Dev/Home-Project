@@ -7,11 +7,11 @@
   <div class="col-md-8 my-4">
     <!-- Blog Post -->
     <div class="row">
-      {% if homes %}
-      {% for obj in homes %}
+      {% if object_list %}
+      {% for obj in object_list %}
       <div class="col-md-6">
         <div class="card mb-4">
-          <img class="card-img-top" src="{{ obj.image.url }}"  alt="Card image cap" style="height:160px; object-fit: cover;">
+          <img class="card-img-top" src="{{ obj.image.url }}" alt="Card image cap" style="height:160px">
           <div class="card-body">
             <h3 class="card-title">
               <a href="{% url 'detail' obj.slug %}">{{ obj.title }}</a>
@@ -19,7 +19,7 @@
             <p class="card-text">
               <div class="row">
                 <div class="col-md-6">
-                  <b>Price:</b> {{ obj.price }}
+                  <b>Price:</b> ${{ obj.price }}
                 </div>
                 <div class="col-md-6">
                   <b>Likes:</b> {{ obj.likes_count }}
@@ -27,7 +27,7 @@
               </div>
               <div class="row">
                 <div class="col-md-6">
-                  <b>Taste:</b> {{ obj.taste }}
+                  <b>Taste:</b> {{ obj.taste }} out of 10
                 </div>
                 <div class="col-md-6">
                   <b>Person:</b> {{ obj.persons }}
@@ -35,8 +35,8 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  {% for cat in obj.get_categories %}
                   <b>Category: </b>
+                  {% for cat in obj.get_categories %}
                   <a href="?q={{ request.GET.q }}&cat={{ cat }}">{{ cat }}</a>
                   {% endfor %}
                 </div>
@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="card-footer text-muted">
-            Updated: {{ obj.updated_at }}, By
+            Updated: {{obj.updated_at}}, By
             <a href="?author={{ obj.user }}">{{ obj.user }}</a>
           </div>
         </div>

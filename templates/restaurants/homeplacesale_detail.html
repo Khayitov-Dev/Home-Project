@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}{{ block.super }}| {{ object.title }}{% endblock title %}
 {% block content %}
 <div class="row">
@@ -85,7 +86,8 @@
         {% if object.comments.all %}
         {% for comment in object.comments.all %}
         <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle comment_pic" src="{{ comment.user.profile.image.url }}" alt="Image">
+            <img style="width: 50px;" src="{% if user.image. %}{{ request.user.image.url }}{% else %}{% static 'icons.jpg' %}{% endif %}">
+            <!-- <img class="d-flex mr-3 rounded-circle comment_pic" src="{{ comment.user.profile.image.url }}" alt="Image"> -->
             <div class="media-body">
                 <h5 class="mt-0">{{ comment.user.get_full_name }}</h5>
                 <p>{{ comment.text }}<br>

@@ -1,10 +1,17 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.views import  generic
 from restaurants import models
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from .forms import HomeCreateForm
+
+
 
 # Create your views here.
 
@@ -14,7 +21,6 @@ class HomeListView(generic.ListView):
     queryset = models.HomePlaceSale.objects.all()
     paginate_by = 6
     template_name = 'restaurants/list.html'
-    context_object_name = 'homes'
 
 
 
@@ -51,7 +57,7 @@ class HomeListView(generic.ListView):
     
 
 class HomeDetailView(generic.DetailView):
-    queryset = models.HomePlaceSale.objects.all()
+    queryset = models.HomePlaceSale.objects.all().order_by('-created_at')
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -65,3 +71,53 @@ class HomeDetailView(generic.DetailView):
                 comment.save()
                 return redirect('detail', c_slug)
         return redirect('detail', c_slug)
+
+
+
+class HomeCreateView(LoginRequiredMixin, SuccessMessageMixin, generic.CreateView):
+    template_name = 'restaurants/form.html'
+    form_class = HomeCreateForm
+    success_url = reverse_lazy('my_posts')
+    success_message = 'Post Created Successfully!'
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        return super().form_valid(form)
+
+
+
+class HomeUpdateView(LoginRequiredMixin,SuccessMessageMixin, generic.UpdateView):
+    form_class = HomeCreateForm
+    template_name = 'restaurants/form.html'
+    success_url = reverse_lazy('my_posts')
+    success_message = 'Post Update Successfully!'
+
+
+    def get_queryset(self):
+        return models.HomePlaceSale.objects.filter(user=self.request.user)
+
+
+
+class HomeDeleteView(LoginRequiredMixin, SuccessMessageMixin, generic.DeleteView):
+    success_url = reverse_lazy('my_posts')
+    success_message = 'Post Deleted Successfully!'
+
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super().delete(request,*args, **kwargs)
+
+
+
+    def get_queryset(self):
+        return models.HomePlaceSale.objects.filter(user=self.request.user)
+
+
+
+class MyPostView(LoginRequiredMixin, generic.ListView):
+    template_name = 'restaurants/my_posts.html'
+
+
+    def get_queryset(self):
+        return models.HomePlaceSale.objects.filter(user=self.request.user)

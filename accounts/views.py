@@ -38,6 +38,6 @@ class ImageUpdateView(LoginRequiredMixin, generic.TemplateView):
     def post(self, request, *args, **kwargs):
         img = request.FILES.get('image')
         user = get_object_or_404(User, username=request.user.username)
-        user.profile.image = img
+        user.image = img
         user.save()
         return redirect('profile', request.user.id)
